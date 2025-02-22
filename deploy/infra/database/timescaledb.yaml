@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: timescaledb
+  namespace: sensor
+spec:
+  serviceName: timescaledb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timescaledb
+  template:
+    metadata:
+      labels:
+        app: timescaledb
+    spec:
+      nodeSelector:
+        node-role: database
+      containers:
+      - name: timescaledb
+        image: timescale/timescaledb:2.18.1-pg16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: 'sensor'
+        - name: POSTGRES_PASSWORD
+          value: 'sensor'
+        - name: POSTGRES_DB
+          value: 'sensor'
+        volumeMounts:
+        - name: timescaledb-volume
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: "4000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+  volumeClaimTemplates:
+  - metadata:
+      name: timescaledb-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: 'local-path'
+      resources:
+        requests:
+          storage: 100Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timescaledb
+  namespace: sensor
+spec:
+  selector:
+    app: timescaledb
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP
