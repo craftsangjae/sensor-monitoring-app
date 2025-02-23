@@ -8,9 +8,38 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "fastapi (>=0.115.8,<0.116.0)",
+    "pydantic-settings (>=2.8.0,<3.0.0)",
+    "dependency-injector (>=4.45.0,<5.0.0)",
+    "asyncpg (>=0.30.0,<0.31.0)",
+    "sqlalchemy (>=2.0.38,<3.0.0)",
+    "greenlet (>=3.1.1,<4.0.0)",
+    "pytz (>=2025.1,<2026.0)"    
 ]
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.3"
+testcontainers = "^4.9.1"
+pytest-cov = "^6.0.0"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
+packages = [
+    {include = "src", from = "."},
+    {include = "webapp", from = "."}
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+
+[tool.coverage.run]
+omit = ["tests/*"]
+source = ["src", "webapp"]
