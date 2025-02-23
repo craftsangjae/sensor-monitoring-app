@@ -1,6 +1,7 @@
 from src.database.container import DatabaseContainer
 from dependency_injector import containers, providers
 
+from src.facility.container import FacilityContainer
 from src.sensor.repository import (
     WaterTankSensorRecordHistoryRepository,
     WaterTankSensorRecordRepository,
@@ -12,6 +13,7 @@ class SensorContainer(containers.DeclarativeContainer):
     """센서 정보 저장"""
 
     database: DatabaseContainer = providers.Container(DatabaseContainer)
+    facility: FacilityContainer = providers.Container(FacilityContainer)
 
     repository = providers.Singleton(
         WaterTankSensorRecordRepository,
@@ -26,4 +28,5 @@ class SensorContainer(containers.DeclarativeContainer):
         SensorRecordService,
         repository=repository,
         history_repository=history_repository,
+        facility_service=facility.service,
     )
