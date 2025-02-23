@@ -57,6 +57,7 @@ class WaterTankSensorRecordHistoryEntity(Base):
 
     __tablename__ = "water_tank_sensor_record_history"
 
+    record_id = Column(Integer, primary_key=True, autoincrement=True)
     tank_id = Column(Integer)
     temperature = Column(Float)
     ph = Column(Float)

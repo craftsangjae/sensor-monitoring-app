@@ -18,9 +18,7 @@ class SessionFactory:
 
     def __init__(self, settings: DatabaseSettings):
         logger.info(f"initialize SessionFactory({settings.DB_TYPE})")
-        if settings.DB_TYPE.startswith("sqlite"):
-            self._engine = create_async_engine(settings.DB_TYPE)
-        elif settings.DB_TYPE.startswith("postgresql"):
+        if settings.DB_TYPE.startswith("postgresql"):
             url = f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
             self._engine = create_async_engine(url, echo=settings.DB_ECHO)
         else:
