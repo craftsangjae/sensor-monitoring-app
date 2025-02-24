@@ -1,12 +1,8 @@
 from datetime import datetime
 import logging
 
-from sqlalchemy import (
-    Column,
-    DateTime,
-    Float,
-    Integer,
-)
+from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy import DateTime
 
 from src.exceptions import SensorAppException
 from src.sensor.domains import WaterTankSensorRecord, WaterTankSensorRecordContent
@@ -20,12 +16,12 @@ class WaterTankSensorRecordEntity(Base):
 
     __tablename__ = "water_tank_sensor_record"
 
-    tank_id = Column(Integer, primary_key=True)
-    temperature = Column(Float)
-    ph = Column(Float)
-    dissolved_oxygen = Column(Float)
-    salinity = Column(Float)
-    recorded_at = Column(DateTime)
+    tank_id: Mapped[int] = mapped_column(primary_key=True)
+    temperature: Mapped[float] = mapped_column()
+    ph: Mapped[float] = mapped_column()
+    dissolved_oxygen: Mapped[float] = mapped_column()
+    salinity: Mapped[float] = mapped_column()
+    recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
     @staticmethod
     def from_domain(domain: WaterTankSensorRecord):
@@ -69,12 +65,14 @@ class WaterTankSensorRecordHistoryEntity(Base):
 
     __tablename__ = "water_tank_sensor_record_history"
 
-    tank_id = Column(Integer, primary_key=True)
-    temperature = Column(Float)
-    ph = Column(Float)
-    dissolved_oxygen = Column(Float)
-    salinity = Column(Float)
-    recorded_at = Column(DateTime, primary_key=True)
+    tank_id: Mapped[int] = mapped_column(primary_key=True)
+    temperature: Mapped[float] = mapped_column()
+    ph: Mapped[float] = mapped_column()
+    dissolved_oxygen: Mapped[float] = mapped_column()
+    salinity: Mapped[float] = mapped_column()
+    recorded_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), primary_key=True
+    )
 
     @staticmethod
     def from_domain(domain: WaterTankSensorRecord):

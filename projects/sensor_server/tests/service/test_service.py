@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import pytest
 
 from src.facility.container import FacilityContainer
@@ -116,7 +116,7 @@ async def test_record_tank_sensor_multiple_times(
             ph=7 + i,
             dissolved_oxygen=10 + i,
             salinity=30 + i,
-            recorded_at=datetime(2025, 1, 1, 12, 0, i),
+            recorded_at=datetime(2025, 1, 1, 12, 0, i, tzinfo=timezone.utc),
         )
         await given_service.record_tank_sensor(given_tank.tank_code, content)
 

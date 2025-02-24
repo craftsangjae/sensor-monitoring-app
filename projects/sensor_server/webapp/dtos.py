@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import Field
 
 from src.sensor.domains import WaterTankSensorRecordContent
@@ -11,7 +11,7 @@ class WaterTankSensorRecordDTO(BaseModel):
     ph: float = Field(..., description="pH")
     dissolved_oxygen: float = Field(..., description="용존산소")
     salinity: float = Field(..., description="염분")
-    recorded_at: datetime = Field(..., description="측정 시간")
+    recorded_at: int = Field(..., description="측정 시간")
 
     def to_content(self) -> WaterTankSensorRecordContent:
         return WaterTankSensorRecordContent(
@@ -19,7 +19,7 @@ class WaterTankSensorRecordDTO(BaseModel):
             ph=self.ph,
             dissolved_oxygen=self.dissolved_oxygen,
             salinity=self.salinity,
-            recorded_at=self.recorded_at,
+            recorded_at=datetime.fromtimestamp(self.recorded_at, tz=timezone.utc),
         )
 
 

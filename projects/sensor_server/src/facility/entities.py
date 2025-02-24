@@ -5,7 +5,7 @@ from sqlalchemy import (
     VARCHAR,
     Integer,
 )
-
+from sqlalchemy.orm import mapped_column, Mapped
 from src.facility.domains import (
     WaterTank,
     WaterTankBuilding,
@@ -21,12 +21,12 @@ class WaterTankEntity(Base):
 
     __tablename__ = "water_tank"
 
-    tank_id = Column(Integer, primary_key=True, autoincrement=True)  # 수조 id
-    tank_name = Column(VARCHAR(20))  # 수조 이름
-    tank_code = Column(VARCHAR(64), unique=True)  # 수조 코드
+    tank_id: Mapped[int] = mapped_column(primary_key=True)  # 수조 id
+    tank_name: Mapped[str] = mapped_column(VARCHAR(20))  # 수조 이름
+    tank_code: Mapped[str] = mapped_column(VARCHAR(64), unique=True)  # 수조 코드
 
-    center_id = Column(Integer)  # 소속된 center id
-    building_id = Column(Integer)  # 소속된 building id
+    center_id: Mapped[int] = mapped_column()  # 소속된 center id
+    building_id: Mapped[int] = mapped_column()  # 소속된 building id
 
     @staticmethod
     def from_domain(domain: WaterTank):
@@ -64,9 +64,9 @@ class WaterTankBuildingEntity(Base):
 
     __tablename__ = "water_tank_building"
 
-    building_id = Column(Integer, primary_key=True, autoincrement=True)  # 동 id
-    building_name = Column(VARCHAR(20))  # 동 이름
-    building_code = Column(VARCHAR(42), unique=True)  # 동 코드
+    building_id: Mapped[int] = mapped_column(primary_key=True)  # 동 id
+    building_name: Mapped[str] = mapped_column(VARCHAR(20))  # 동 이름
+    building_code: Mapped[str] = mapped_column(VARCHAR(42), unique=True)  # 동 코드
 
     center_id = Column(Integer)  # 소속된 center id
 
@@ -104,8 +104,8 @@ class WaterTankCenterEntity(Base):
 
     __tablename__ = "water_tank_center"
 
-    center_id = Column(Integer, primary_key=True, autoincrement=True)  # 센터 id
-    center_name = Column(VARCHAR(20))  # 센터 이름
+    center_id: Mapped[int] = mapped_column(primary_key=True)  # 센터 id
+    center_name: Mapped[str] = mapped_column(VARCHAR(20))  # 센터 이름
 
     @staticmethod
     def from_domain(domain: WaterTankCenter):
