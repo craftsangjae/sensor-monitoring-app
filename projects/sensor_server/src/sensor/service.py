@@ -10,7 +10,7 @@ from src.sensor.repository import (
 
 
 class SensorRecordService:
-    """센서 측정 정보 서비스"""
+    """센서 측정 정보"""
 
     def __init__(
         self,

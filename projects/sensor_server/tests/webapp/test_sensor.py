@@ -15,6 +15,8 @@ async def test_record_tank_sensor(
                 "tank_code": given_tank.tank_code,
                 "temperature": 20,
                 "ph": 7,
+                "salinity": 10,
+                "dissolved_oxygen": 100,
                 "recorded_at": datetime(2025, 1, 1, 0, 0, i).isoformat(),
             },
         )

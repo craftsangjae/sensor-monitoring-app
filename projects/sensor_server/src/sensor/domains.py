@@ -6,8 +6,10 @@ from datetime import datetime
 class WaterTankSensorRecordContent:
     """센서 측정 값"""
 
-    temperature: float
-    ph: float
+    temperature: float  # 온도
+    ph: float  # 산성도
+    dissolved_oxygen: float  # 용존산소
+    salinity: float  # 염분
     recorded_at: datetime
 
 
@@ -15,9 +17,7 @@ class WaterTankSensorRecordContent:
 class WaterTankSensorRecord:
     tank_id: int  # 수조 id
 
-    temperature: float
-    ph: float
-    recorded_at: datetime
+    content: WaterTankSensorRecordContent
 
     @staticmethod
     def from_content(
@@ -25,7 +25,5 @@ class WaterTankSensorRecord:
     ) -> "WaterTankSensorRecord":
         return WaterTankSensorRecord(
             tank_id=tank_id,
-            temperature=content.temperature,
-            ph=content.ph,
-            recorded_at=content.recorded_at,
+            content=content,
         )

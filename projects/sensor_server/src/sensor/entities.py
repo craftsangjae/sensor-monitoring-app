@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from sqlalchemy import (
@@ -7,7 +8,8 @@ from sqlalchemy import (
     Integer,
 )
 
-from src.sensor.domains import WaterTankSensorRecord
+from src.exceptions import SensorAppException
+from src.sensor.domains import WaterTankSensorRecord, WaterTankSensorRecordContent
 from src.database.base import Base
 
 logger = logging.getLogger(__name__)
@@ -21,6 +23,8 @@ class WaterTankSensorRecordEntity(Base):
     tank_id = Column(Integer, primary_key=True)
     temperature = Column(Float)
     ph = Column(Float)
+    dissolved_oxygen = Column(Float)
+    salinity = Column(Float)
     recorded_at = Column(DateTime)
 
     @staticmethod
@@ -28,24 +32,32 @@ class WaterTankSensorRecordEntity(Base):
         """도메인 객체를 엔티티로 변환합니다."""
         return WaterTankSensorRecordEntity(
             tank_id=domain.tank_id,
-            temperature=domain.temperature,
-            ph=domain.ph,
-            recorded_at=domain.recorded_at,
+            temperature=domain.content.temperature,
+            ph=domain.content.ph,
+            dissolved_oxygen=domain.content.dissolved_oxygen,
+            salinity=domain.content.salinity,
+            recorded_at=domain.content.recorded_at,
         )
 
     def to_domain(self) -> WaterTankSensorRecord:
         """엔티티 객체를 도메인 객체로 변환합니다."""
         return WaterTankSensorRecord(
             tank_id=self.tank_id,
-            temperature=self.temperature,
-            ph=self.ph,
-            recorded_at=self.recorded_at,
+            content=WaterTankSensorRecordContent(
+                temperature=self.temperature,
+                ph=self.ph,
+                dissolved_oxygen=self.dissolved_oxygen,
+                salinity=self.salinity,
+                recorded_at=self.recorded_at,
+            ),
         )
 
     def update(self, domain: WaterTankSensorRecord):
         """도메인 객체로 엔티티의 값을 업데이트합니다."""
-        self.temperature = domain.temperature
-        self.ph = domain.ph
+        self.temperature = domain.content.temperature
+        self.ph = domain.content.ph
+        self.dissolved_oxygen = domain.content.dissolved_oxygen
+        self.salinity = domain.content.salinity
 
     def primary_key(self) -> int:
         """엔티티의 기본 키를 반환합니다."""
@@ -57,36 +69,44 @@ class WaterTankSensorRecordHistoryEntity(Base):
 
     __tablename__ = "water_tank_sensor_record_history"
 
-    record_id = Column(Integer, primary_key=True, autoincrement=True)
-    tank_id = Column(Integer)
+    tank_id = Column(Integer, primary_key=True)
     temperature = Column(Float)
     ph = Column(Float)
-    recorded_at = Column(DateTime)
+    dissolved_oxygen = Column(Float)
+    salinity = Column(Float)
+    recorded_at = Column(DateTime, primary_key=True)
 
     @staticmethod
     def from_domain(domain: WaterTankSensorRecord):
         """도메인 객체를 엔티티로 변환합니다."""
         return WaterTankSensorRecordHistoryEntity(
             tank_id=domain.tank_id,
-            temperature=domain.temperature,
-            ph=domain.ph,
-            recorded_at=domain.recorded_at,
+            temperature=domain.content.temperature,
+            ph=domain.content.ph,
+            dissolved_oxygen=domain.content.dissolved_oxygen,
+            salinity=domain.content.salinity,
+            recorded_at=domain.content.recorded_at,
         )
 
     def to_domain(self) -> WaterTankSensorRecord:
         """엔티티 객체를 도메인 객체로 변환합니다."""
         return WaterTankSensorRecord(
             tank_id=self.tank_id,
-            temperature=self.temperature,
-            ph=self.ph,
-            recorded_at=self.recorded_at,
+            content=WaterTankSensorRecordContent(
+                temperature=self.temperature,
+                ph=self.ph,
+                dissolved_oxygen=self.dissolved_oxygen,
+                salinity=self.salinity,
+                recorded_at=self.recorded_at,
+            ),
         )
 
     def update(self, domain: WaterTankSensorRecord):
         """도메인 객체로 엔티티의 값을 업데이트합니다."""
-        self.temperature = domain.temperature
-        self.ph = domain.ph
+        raise SensorAppException(
+            "WaterTankSensorRecordHistoryEntity는 업데이트 불가능합니다."
+        )
 
-    def primary_key(self) -> int:
+    def primary_key(self) -> tuple[int, datetime]:
         """엔티티의 기본 키를 반환합니다."""
-        return self.tank_id
+        return self.tank_id, self.recorded_at
