@@ -49,8 +49,13 @@ spec:
           timeoutSeconds: 3          # 추가: 요청 타임아웃
           successThreshold: 1        # 추가: 성공으로 간주할 횟수
           failureThreshold: 3        # 추가: 실패 허용 횟수            
-
-  
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1G
+          requests:
+            cpu: 1000m
+            memory: 1G
 
 ---
 apiVersion: v1

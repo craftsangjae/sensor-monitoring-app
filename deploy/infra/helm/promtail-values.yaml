@@ -93,7 +93,7 @@ image:
   # -- Docker image repository
   repository: grafana/promtail
   # -- Overrides the image tag whose default is the chart's appVersion
-  tag: null
+  tag: "2.9.5"
   # -- Docker image pull policy
   pullPolicy: IfNotPresent
 
@@ -436,6 +436,19 @@ config:
             name: name
             method: method
             message: message
+
+      - timestamp:
+          source: timestamp
+          format: RFC3339  # ISO 8601과 호환            
+                
+      - labels:
+          timestamp:
+          level:
+          trace_id:
+          span_id:
+          name:
+          method:        
+          message:    
       
     common:
       - action: replace

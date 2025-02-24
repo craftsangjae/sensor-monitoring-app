@@ -36,18 +36,13 @@ def create_app(container: ApplicationContainer = None) -> FastAPI:
 
     app = FastAPI(
         title="Sensor Server",
-        openapi_url="/api/openapi.json",
-        docs_url="/api/docs",
-        servers=[
-            {"url": "/", "description": "Local Test"},
-            {"url": "http://localhost", "description": "Local Test"},
-        ],
         lifespan=lifespan,
         generate_unique_id_function=lambda route: route.name,
     )
 
     app.include_router(health.router, tags=["health"], include_in_schema=False)
     app.include_router(sensor.router, tags=["sensor"])
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -58,7 +53,7 @@ def create_app(container: ApplicationContainer = None) -> FastAPI:
 
     app.add_middleware(
         GZipMiddleware,
-        minimum_size=1000,
+        minimum_size=4096,
     )
 
     # 프로메테우스 Metric 설정

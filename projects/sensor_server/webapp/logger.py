@@ -41,7 +41,7 @@ class JSONFormatter(logging.Formatter):
                 "traceback": formatted_tb,
             }
 
-        return json.dumps(log_message, ensure_ascii=False, indent=2)
+        return json.dumps(log_message, ensure_ascii=False)
 
 
 def initialize_tracer():
