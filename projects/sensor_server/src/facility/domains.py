@@ -13,18 +13,13 @@ class WaterTank:
     building_id: int  # building id
 
     @staticmethod
-    def new(
-        tank_name: str, building: "WaterTankBuilding", center: "WaterTankCenter"
-    ) -> "WaterTank":
-        assert (
-            building.center_id == center.center_id
-        ), "building과 center의 center_id가 다릅니다."
+    def new(tank_name: str, building: "WaterTankBuilding") -> "WaterTank":
         return WaterTank(
             tank_id=None,  # 생성 시 자동 생성
             tank_name=tank_name,
-            tank_code=f"{center.center_id}_{building.building_id}_{tank_name}",
+            tank_code=f"{building.building_code}_{tank_name}",
             building_id=building.building_id,
-            center_id=center.center_id,
+            center_id=building.center_id,
         )
 
 

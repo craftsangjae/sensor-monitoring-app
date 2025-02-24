@@ -96,12 +96,9 @@ async def given_building(
 async def given_tank(
     given_water_tank_repository: WaterTankRepository,
     given_building: WaterTankBuilding,
-    given_center: WaterTankCenter,
 ):
     """테스트용 수조 생성"""
-    tank = WaterTank.new(
-        tank_name="test_tank", building=given_building, center=given_center
-    )
+    tank = WaterTank.new(tank_name="test_tank", building=given_building)
     await given_water_tank_repository.save(tank)
     return tank
 

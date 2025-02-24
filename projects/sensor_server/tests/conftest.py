@@ -93,7 +93,7 @@ def given_database_settings(given_postgres_container: PostgresContainer):
         DB_PASSWORD=given_postgres_container.password,
         DB_HOST=given_postgres_container.get_container_host_ip(),
         DB_PORT=given_postgres_container.get_exposed_port(5432),
-        DB_ECHO=False,
+        DB_ECHO=True,
     )
 
 
