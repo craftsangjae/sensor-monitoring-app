@@ -63,10 +63,34 @@ kind: Service
 metadata:
   name: sensor-server
   namespace: sensor
+  labels:
+    app: sensor-server
 spec:
   selector:
     app: sensor-server
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 80
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sensor-server
+  namespace: sensor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: sensor-server
+  namespaceSelector:
+    matchNames:
+      - sensor
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+    scrapeTimeout: 14s

@@ -57,7 +57,22 @@ def create_app(container: ApplicationContainer = None) -> FastAPI:
     )
 
     # 프로메테우스 Metric 설정
-    Instrumentator().instrument(app).expose(app, include_in_schema=False)
+    (
+        Instrumentator()
+        .instrument(app)
+        .expose(
+            app,
+            excluded_handlers=[
+                "/docs",
+                "/redoc",
+                "/openapi.json",
+                "/metrics",
+                "/health",
+                "/favicon.ico",
+            ],
+            include_in_schema=False,
+        )
+    )
 
     # opentelemetry 설정
     FastAPIInstrumentor.instrument_app(app)
