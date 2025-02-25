@@ -17,7 +17,7 @@ async def test_record_tank_sensor(
                 "ph": 7,
                 "salinity": 10,
                 "dissolved_oxygen": 100,
-                "recorded_at": datetime(2025, 1, 1, 0, 0, i).timestamp(),
+                "recorded_at": int(datetime(2025, 1, 1, 0, 0, i).timestamp()),
             },
         )
 

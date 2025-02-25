@@ -58,10 +58,7 @@ def create_app(container: ApplicationContainer = None) -> FastAPI:
 
     # 프로메테우스 Metric 설정
     (
-        Instrumentator()
-        .instrument(app)
-        .expose(
-            app,
+        Instrumentator(
             excluded_handlers=[
                 "/docs",
                 "/redoc",
@@ -70,6 +67,10 @@ def create_app(container: ApplicationContainer = None) -> FastAPI:
                 "/health",
                 "/favicon.ico",
             ],
+        )
+        .instrument(app)
+        .expose(
+            app,
             include_in_schema=False,
         )
     )
