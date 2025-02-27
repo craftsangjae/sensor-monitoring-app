@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sensor-graphql
+  namespace: sensor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sensor-graphql
+  template:
+    metadata:
+      labels:
+        app: sensor-graphql
+    spec:
+      containers:
+      - name: sensor-graphql
+        image: registry.crafthomelab.com/sensor-graphql:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+        env:
+          - name: DATABASE_URL
+            value: postgresql://sensor:sensor@timescaledb:5432/sensor
+          - name: ENV
+            value: production
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10    
+          periodSeconds: 10          
+          timeoutSeconds: 3          # 추가: 요청 타임아웃
+          failureThreshold: 3        # 추가: 실패 허용 횟수
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10    
+          periodSeconds: 10          
+          timeoutSeconds: 3          # 추가: 요청 타임아웃
+          successThreshold: 1        # 추가: 성공으로 간주할 횟수
+          failureThreshold: 3        # 추가: 실패 허용 횟수            
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1G
+          requests:
+            cpu: 1000m
+            memory: 1G
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sensor-graphql
+  namespace: sensor
+  labels:
+    app: sensor-graphql
+spec:
+  selector:
+    app: sensor-graphql
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000

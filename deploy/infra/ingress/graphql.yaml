@@ -1,0 +1,30 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sensor-graphql-cert
+  namespace: sensor
+spec:
+  secretName: sensor-graphql-tls
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: ClusterIssuer
+  dnsNames:
+    - sensor-graphql.crafthomelab.com
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sensor-graphql
+  namespace: sensor
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`sensor-graphql.crafthomelab.com`)
+      kind: Rule
+      services:
+        - name: sensor-graphql
+          port: 80
+  tls:
+    secretName: sensor-graphql-tls

@@ -53,10 +53,13 @@ CREATE TABLE water_tank_sensor_record_history (
         dissolved_oxygen FLOAT,
         salinity FLOAT, 
         recorded_at TIMESTAMP WITH TIME ZONE NOT NULL, 
-        PRIMARY KEY (tank_id, recorded_at),
 
         FOREIGN KEY (tank_id) REFERENCES water_tank(tank_id)
 );
+
+-- 하이퍼테이블로 변환
+SELECT create_hypertable('water_tank_sensor_record_history', 'recorded_at');
+CREATE INDEX ON water_tank_sensor_record_history_tank_id_recorded_at_idx (tank_id, recorded_at DESC);
 
 -- 데이터 넣기
 INSERT INTO water_tank_center (center_id, center_name) VALUES (1, '임실');
